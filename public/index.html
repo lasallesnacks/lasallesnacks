@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="manifest" href="manifest.json">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My App</title>
+    <link rel="stylesheet" href="style.css?v=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+
+    <script>
+        (async function checkAuth() {
+            const cookies = document.cookie.split("; ").reduce((acc, cookie) => {
+                const [key, value] = cookie.split("=");
+                acc[key] = value;
+                return acc;
+            }, {});
+
+            const acctoken = cookies["acctoken"];
+            if (!acctoken) {
+                window.location.href = "login.html";
+                return;
+            }
+
+            try {
+                const response = await fetch("http://216.8.148.154:8090/api/collections/users/auth-refresh", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + acctoken }
+                });
+
+                if (!response.ok) throw new Error("Invalid token");
+
+                document.body.style.display = "block";
+            } catch (error) {
+                document.cookie = "acctoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                window.location.href = "login.html";
+            }
+        })();
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js');
+        }
+
+        function loadPage(page) {
+            fetch(page)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('content').innerHTML = html;
+                    const scripts = document.getElementById('content').querySelectorAll("script");
+                    scripts.forEach(oldScript => {
+                        const newScript = document.createElement("script");
+                        if (oldScript.src) {
+                            newScript.src = oldScript.src;
+                        } else {
+                            newScript.textContent = oldScript.textContent;
+                        }
+                        document.body.appendChild(newScript).parentNode.removeChild(newScript);
+                    });
+                })
+                .catch(error => console.error('Error loading page:', error));
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            loadPage('order.html'); // Default page
+        });
+    </script>
+
+    <style>
+        /* News Ticker */
+        .news-ticker {
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            background: #ff4500;
+            color: white;
+            padding: 10px 0;
+            font-weight: bold;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+        .news-ticker span {
+            display: inline-block;
+            padding-left: 100%;
+            animation: ticker 15s linear infinite;
+        }
+        @keyframes ticker {
+            from { transform: translateX(0); }
+            to { transform: translateX(-100%); }
+        }
+
+        /* Adjust body to prevent overlap */
+        body {
+            padding-top: 40px;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            color: #888;
+            font-size: 12px;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5px 0;
+            cursor: pointer;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 3px;
+        }
+
+        .nav-item.active {
+            color: #ff4500;
+        }
+    </style>
+</head>
+<body>
+    <!-- News Ticker -->
+    <div class="news-ticker">
+        <span>ORDER PAGE WILL BE DONE IN 1-2 DAYS  ANY BUG REPORTS/QUESTIONS WILL BE ACCEPTED</span>
+    </div>
+
+    <!-- Dynamic Content Section -->
+    <div id="content">
+        <!-- Loaded content will appear here -->
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="loadPage('order.html')">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Order</span>
+        </div>
+        <div class="nav-item" onclick="loadPage('history.html')">
+            <i class="fas fa-history"></i>
+            <span>History</span>
+        </div>
+        <div class="nav-item" onclick="loadPage('payment.html')">
+            <i class="fas fa-credit-card"></i>
+            <span>Payment</span>
+        </div>
+    </div>
+</body>
+</html>

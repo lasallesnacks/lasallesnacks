@@ -1,0 +1,41 @@
+<div class="section">
+    <div class="section-title">Available Items</div>
+    <div id="items-container">
+        <!-- Items will be inserted here -->
+    </div>
+</div>
+
+<script>
+    // PocketBase URL (Change this to your PocketBase URL)
+    window.POCKETBASE_URL = window.POCKETBASE_URL || "http://216.8.148.154:8090";
+
+    async function fetchItems() {
+        try {
+            const response = await fetch(`${POCKETBASE_URL}/api/collections/items/records`);
+            const data = await response.json();
+
+            // Get the container
+            const container = document.getElementById("items-container");
+            container.innerHTML = ""; // Clear previous content
+
+            data.items.forEach(item => {
+                // Create a new card for each item
+                const card = document.createElement("div");
+                card.className = "card";
+                card.innerHTML = `
+                    <div class="card-content">
+                        <div class="card-title">${item.id}</div>
+                        <div class="card-subtitle">Food Item</div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+        } catch (error) {
+            console.error("Error fetching items:", error);
+        }
+    }
+
+    // Fetch items when this section is loaded
+    fetchItems();
+</script>

@@ -1,0 +1,87 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background-color: #f8f8f8;
+}
+
+/* Bottom Navigation */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: white;
+    display: flex;
+    justify-content: space-around;
+    padding: 12px 0;
+    border-top: 2px solid #ccc;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Navigation Buttons */
+.nav-button {
+    background: none;
+    border: none;
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: gray;
+    cursor: pointer;
+    width: 100px;
+}
+
+/* Icons */
+.nav-button i {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+/* Active Page */
+.nav-button.active {
+    color: red;
+    font-weight: bold;
+}
+/* Center and style the form */
+form {
+    background: white;
+    padding: 25px;
+    max-width: 350px;
+    margin: 60px auto;
+    border-radius: 12px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Center the input text properly */
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    background-color: white;
+    text-align: left; /* Make sure text starts from the left */
+    box-sizing: border-box;
+}
+
+/* Center the button text */
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-weight: bold;
+    text-align: center; /* Center text inside the button */
+}
+
+button:hover {
+    background-color: #0056b3;
+}

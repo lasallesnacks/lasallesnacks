@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="manifest" href="manifest.json">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css?v=1">
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (document.cookie.includes("acctoken=")) {
+                window.location.href = "index.html";
+            }
+        });
+
+        async function login(event) {
+            event.preventDefault();
+
+            const identity = document.getElementById("identity").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const errorMessage = document.getElementById("error-message");
+
+            if (!identity || !password) {
+                errorMessage.textContent = "Please fill in all fields.";
+                errorMessage.style.display = "block";
+                return;
+            }
+
+            try {
+                const response = await fetch("http://216.8.148.154:8090/api/collections/users/auth-with-password", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ identity, password })
+                });
+
+                const data = await response.json(); 
+                if (response.ok) {
+                    document.cookie = `acctoken=${data.token}; path=/;`;
+                    window.location.href = "index.html";
+                } else {
+                    errorMessage.textContent = "Invalid username or password.";
+                    errorMessage.style.display = "block";
+                }
+            } catch (error) {
+                errorMessage.textContent = "Network error. Try again.";
+                errorMessage.style.display = "block";
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Login</h1>
+    <form onsubmit="login(event)">
+        <input type="text" id="identity" placeholder="Username or Email" required><br><br>
+        <input type="password" id="password" placeholder="Password" required><br><br>
+        <button type="submit">Login</button>
+    </form>
+    <p id="error-message" class="error" style="display: none; color: red;"></p>
+    <p>Don't have an account? <a href="signup.html" style="color: lightblue;">Sign up</a></p>
+</body>
+</html>
